@@ -3,19 +3,36 @@
         <transition name="dropdown">
             <div
                 v-if="displayCart"
-                class="list-group"
+                class="list-group bg-white"
                 aria-labelledby="cartDropdown"
             >
-                <div
-                    v-for="(item, index) in cart"
-                    :key="index"
-                    class="list-group-item d-flex justify-content-between"
-                >
-                    <div>{{ item.name }}</div>
-                    <div class="ml-3 font-weight-bold">
-                        <curr :amt="item.price"></curr>
+                <div v-for="(item, index) in cart" :key="index">
+                    <div class="dropdown-item-text text-nowrap align-middle">
+                        <span class="badge bg-success align-text-top mr-1">
+                            {{ item.qty }}
+                        </span>
+                        {{ item.product.name }}
+                        <b>
+                            <curr
+                                :amt="item.qty * Number(item.product.price)"
+                            ></curr>
+                        </b>
+                        <button
+                            @click.stop="
+                                this.$parent.$emit('deleteItem', index)
+                            "
+                            class="btn btn-small btn-danger ml-2"
+                        >
+                            -
+                        </button>
                     </div>
                 </div>
+                <router-link
+                    to="/checkout"
+                    class="btn btn-sm btn-success
+                text-white float-right mr-2 mt-2"
+                    >Checkout</router-link
+                >
             </div>
         </transition>
     </div>
@@ -27,7 +44,8 @@ export default {
     props: ['cart', 'displayCart'],
     components: {
         Curr
-    }
+    },
+    emits: ['deleteItem']
 }
 </script>
 
